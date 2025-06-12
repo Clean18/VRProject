@@ -12,6 +12,15 @@ public class PitchingMachine : MonoBehaviour
     Coroutine shootRoutine;
 	WaitForSeconds shootDelay;
 
+	// 오브젝트 풀
+	public int poolCount = 10;
+	public List<Rigidbody> ballPool = new();
+
+	void Awake()
+	{
+		CreateBall();
+	}
+
 	void Start()
 	{
 		shootDelay = new WaitForSeconds(shootDelayTime);
@@ -25,21 +34,63 @@ public class PitchingMachine : MonoBehaviour
 		}
 	}
 
+	void CreateBall()
+	{
+		for (int i = 0; i < poolCount; i++)
+		{
+			var ball = Instantiate(ballPrefab, ballSpawnPosition.position, ballSpawnPosition.rotation);
+			ball.SetActive(false);
+			var ballRigid = ball.GetComponent<Rigidbody>();
+			ballPool.Add(ballRigid);
+		}
+	}
+
+	Rigidbody GetBall()
+	{
+		foreach (var ballRigid in ballPool)
+		{
+			if (!ballRigid.gameObject.activeSelf)
+			{
+				ballRigid.velocity = Vector3.zero;
+				ballRigid.angularVelocity = Vector3.zero;
+				ballRigid.transform.position = ballSpawnPosition.position;
+				ballRigid.transform.rotation = ballSpawnPosition.rotation;
+				ballRigid.gameObject.SetActive(true);
+				return ballRigid;
+			}
+		}
+		// 꺼낼 볼 없으면 생성
+		var ball = Instantiate(ballPrefab, ballSpawnPosition.position, ballSpawnPosition.rotation);
+		var newRigid = ball.GetComponent<Rigidbody>();
+		ballPool.Add(newRigid);
+		return newRigid;
+	}
+
 	IEnumerator Shoot()
 	{
 		while (true)
 		{
 			// 정면 방향으로 발사
-			GameObject ball = Instantiate(ballPrefab, ballSpawnPosition.position, ballSpawnPosition.rotation);
-			Rigidbody rigid = ball.GetComponent<Rigidbody>();
+			Rigidbody ball = GetBall();
 
 			// AddForce
-			//rigid.AddForce(ballSpawnPosition.forward * shootPower, ForceMode.Impulse); // 너무빠름
+			//ball.AddForce(ballSpawnPosition.forward * shootPower, ForceMode.Impulse); // 너무빠름
 
 			// Velocity
-			rigid.velocity = ballSpawnPosition.forward * shootPower; // 느린데 포물선그림
+			ball.velocity = ballSpawnPosition.forward * shootPower; // 느린데 포물선그림
+
+			// 5초 뒤 풀로
+			StartCoroutine(ReturnBall(ball, 5f));
 
 			yield return shootDelay;
 		}
+	}
+
+	IEnumerator ReturnBall(Rigidbody ball, float count)
+	{
+		yield return new WaitForSeconds(count);
+		ball.velocity = Vector3.zero;
+		ball.angularVelocity = Vector3.zero;
+		ball.gameObject.SetActive(false);
 	}
 }
