@@ -19,6 +19,8 @@ public class PitchingMachine : MonoBehaviour
 	// 오브젝트 풀
 	public int poolCount = 10;
 	public List<Rigidbody> ballPool = new();
+	public Dictionary<Rigidbody, TrailRenderer> trailDic = new();
+	public float ballReturnTime = 9f;
 
 	void Awake()
 	{
@@ -45,7 +47,9 @@ public class PitchingMachine : MonoBehaviour
 			var ball = Instantiate(ballPrefab, ballSpawnPosition.position, ballSpawnPosition.rotation);
 			ball.SetActive(false);
 			var ballRigid = ball.GetComponent<Rigidbody>();
+			var ballTrail = ball.GetComponent<TrailRenderer>();
 			ballPool.Add(ballRigid);
+			trailDic.Add(ballRigid, ballTrail);
 		}
 	}
 
@@ -77,18 +81,12 @@ public class PitchingMachine : MonoBehaviour
 			// 정면 방향으로 발사
 			Rigidbody ball = GetBall();
 
-			// AddForce
-			//ball.AddForce(ballSpawnPosition.forward * shootPower, ForceMode.Impulse); // 너무빠름
-
-			// Velocity
-			//ball.velocity = ballSpawnPosition.forward * shootPower; // 느린데 포물선그림
-			//ball.velocity = strikeZones[0].forward * shootPower;
-
-			CalculateBallisticVelocity(ball.transform.position, strikeZones[currentTarget - 1].position, shootPower, out Vector3 result);
+			// 속도가 느려도 존에 닿을 수 있게
+			VelocityCalculate(ball.transform.position, strikeZones[currentTarget - 1].position, shootPower, out Vector3 result);
 			ball.velocity = result;
 
-			// 5초 뒤 풀로
-			StartCoroutine(ReturnBall(ball, 5f));
+			// ballReturnTime초 뒤 풀로 돌아감
+			StartCoroutine(ReturnBall(ball, ballReturnTime));
 
 			yield return shootDelay;
 		}
@@ -98,12 +96,12 @@ public class PitchingMachine : MonoBehaviour
 	{
 		// 볼 풀로
 		yield return new WaitForSeconds(count);
-		ball.velocity = Vector3.zero;
-		ball.angularVelocity = Vector3.zero;
 		ball.gameObject.SetActive(false);
+		var trail = ball.GetComponent<TrailRenderer>();
+		trail.Clear();
 	}
 
-	bool CalculateBallisticVelocity(Vector3 start, Vector3 target, float speed, out Vector3 result)
+	bool VelocityCalculate(Vector3 start, Vector3 target, float speed, out Vector3 result)
 	{
 		result = Vector3.zero;
 
@@ -141,7 +139,7 @@ public class PitchingMachine : MonoBehaviour
 		Vector3 start = ballSpawnPosition.position;
 		Vector3 target = strikeZones[currentTarget - 1].position;
 
-		if (!CalculateBallisticVelocity(start, target, shootPower, out Vector3 velocity))
+		if (!VelocityCalculate(start, target, shootPower, out Vector3 velocity))
 			return;
 
 		// 포물선 궤적 그리기

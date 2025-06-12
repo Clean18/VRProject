@@ -180,7 +180,7 @@ GameObject:
   - component: {fileID: -9026638405773008639}
   m_Layer: 0
   m_Name: Baseball
-  m_TagString: Untagged
+  m_TagString: Ball
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -235,7 +235,7 @@ SphereCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7834466072815097227}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 88d4b25eda4079547a0e730569fd4082, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -301,7 +301,7 @@ TrailRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.09915924
+        value: 0.072273254
         inSlope: 0
         outSlope: 0
         tangentMode: 0
