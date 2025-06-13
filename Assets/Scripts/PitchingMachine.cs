@@ -2,17 +2,18 @@
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using TMPro;
 
 public class PitchingMachine : MonoBehaviour
 {
     public Transform ballSpawnPosition;
-	public Transform[] strikeZones = new Transform[9]; // 9개 위치
+	public Transform[] strikeZones = new Transform[9]; // 스트라이크존 9개 위치
 	[Range(1, 9)]
-	public int currentTarget;
+	public int currentTarget; // 공을 던질 스트라이크존 번호
 	public GameObject ballPrefab;
 
-	public float shootDelayTime = 1f;
-	public float shootPower = 30f;
+	public float shootDelayTime = 1f;	// 던지는 속도
+	public float shootPower = 30f;		// 던지는 힘
     Coroutine shootRoutine;
 	WaitForSeconds shootDelay;
 
@@ -21,6 +22,9 @@ public class PitchingMachine : MonoBehaviour
 	public List<Rigidbody> ballPool = new();
 	public Dictionary<Rigidbody, TrailRenderer> trailDic = new();
 	public float ballReturnTime = 9f;
+
+	// 공속도 text
+	public TMP_Text ballSpeedTest;
 
 	void Awake()
 	{
@@ -70,7 +74,9 @@ public class PitchingMachine : MonoBehaviour
 		// 꺼낼 볼 없으면 생성
 		var ball = Instantiate(ballPrefab, ballSpawnPosition.position, ballSpawnPosition.rotation);
 		var newRigid = ball.GetComponent<Rigidbody>();
+		var newTrail = ball.GetComponent<TrailRenderer>();
 		ballPool.Add(newRigid);
+		trailDic.Add(newRigid, newTrail);
 		return newRigid;
 	}
 
@@ -82,11 +88,22 @@ public class PitchingMachine : MonoBehaviour
 			Rigidbody ball = GetBall();
 
 			// 속도가 느려도 존에 닿을 수 있게
-			VelocityCalculate(ball.transform.position, strikeZones[currentTarget - 1].position, shootPower, out Vector3 result);
-			ball.velocity = result;
+			if (VelocityCalculate(ball.transform.position, strikeZones[currentTarget - 1].position, shootPower, out Vector3 result))
+			{
+				// 텍스트
+				if (ballSpeedTest != null)
+					ballSpeedTest.text = string.Format("{0:F1} km/h", (result.magnitude * 3.6f));
 
-			// ballReturnTime초 뒤 풀로 돌아감
-			StartCoroutine(ReturnBall(ball, ballReturnTime));
+				// 볼 속도
+				ball.velocity = result;
+				//Debug.Log($"볼 속도 : {result.magnitude}");
+
+				// 볼 회전속도
+				ball.angularVelocity = transform.right * shootPower;
+
+				// ballReturnTime 초 뒤 풀로 돌아감
+				StartCoroutine(ReturnBall(ball, ballReturnTime));
+			}
 
 			yield return shootDelay;
 		}
@@ -96,9 +113,10 @@ public class PitchingMachine : MonoBehaviour
 	{
 		// 볼 풀로
 		yield return new WaitForSeconds(count);
+		if (trailDic.TryGetValue(ball, out TrailRenderer trail))
+			trail.Clear();
+
 		ball.gameObject.SetActive(false);
-		var trail = ball.GetComponent<TrailRenderer>();
-		trail.Clear();
 	}
 
 	bool VelocityCalculate(Vector3 start, Vector3 target, float speed, out Vector3 result)
