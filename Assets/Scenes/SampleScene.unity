@@ -617,7 +617,7 @@ MonoBehaviour:
   currentTarget: 4
   ballPrefab: {fileID: 7834466072815097227, guid: 0ef529b3ae05415409e9558c94941060, type: 3}
   shootDelayTime: 1
-  shootPower: 20
+  shootPower: 25
   poolCount: 10
   ballPool: []
   ballReturnTime: 9
@@ -2216,46 +2216,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 368552811456767501, guid: e18554303d35e9e4c8be10d7e6a313b6, type: 3}
-      propertyPath: m_Drag
-      value: 0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 368552811456767501, guid: e18554303d35e9e4c8be10d7e6a313b6, type: 3}
-      propertyPath: m_Mass
-      value: 0.935
-      objectReference: {fileID: 0}
-    - target: {fileID: 368552811456767501, guid: e18554303d35e9e4c8be10d7e6a313b6, type: 3}
-      propertyPath: m_UseGravity
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 368552811456767501, guid: e18554303d35e9e4c8be10d7e6a313b6, type: 3}
-      propertyPath: m_AngularDrag
-      value: 0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 368552811456767501, guid: e18554303d35e9e4c8be10d7e6a313b6, type: 3}
-      propertyPath: m_IsKinematic
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1767083154015998468, guid: e18554303d35e9e4c8be10d7e6a313b6, type: 3}
-      propertyPath: m_Radius
-      value: 0.12
-      objectReference: {fileID: 0}
-    - target: {fileID: 1767083154015998468, guid: e18554303d35e9e4c8be10d7e6a313b6, type: 3}
-      propertyPath: m_Center.y
-      value: 0.52
-      objectReference: {fileID: 0}
-    - target: {fileID: 5785294538409831691, guid: e18554303d35e9e4c8be10d7e6a313b6, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 5785294538409831691, guid: e18554303d35e9e4c8be10d7e6a313b6, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 1.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 5785294538409831691, guid: e18554303d35e9e4c8be10d7e6a313b6, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 1.5
-      objectReference: {fileID: 0}
     - target: {fileID: 5785294538409831691, guid: e18554303d35e9e4c8be10d7e6a313b6, type: 3}
       propertyPath: m_LocalPosition.x
       value: 1.116
@@ -2296,25 +2256,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7368394181529000692, guid: e18554303d35e9e4c8be10d7e6a313b6, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.0626
-      objectReference: {fileID: 0}
-    - target: {fileID: 7368394181529000692, guid: e18554303d35e9e4c8be10d7e6a313b6, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0.018
-      objectReference: {fileID: 0}
     - target: {fileID: 8007341276302647247, guid: e18554303d35e9e4c8be10d7e6a313b6, type: 3}
       propertyPath: m_Name
       value: Baseball_Bat
-      objectReference: {fileID: 0}
-    - target: {fileID: 8764550641729912349, guid: e18554303d35e9e4c8be10d7e6a313b6, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.1615
-      objectReference: {fileID: 0}
-    - target: {fileID: 8764550641729912349, guid: e18554303d35e9e4c8be10d7e6a313b6, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0.018
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

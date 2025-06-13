@@ -94,12 +94,15 @@ public class PitchingMachine : MonoBehaviour
 				if (ballSpeedTest != null)
 					ballSpeedTest.text = string.Format("{0:F1} km/h", (result.magnitude * 3.6f));
 
-				// 볼 속도
-				ball.velocity = result;
-				//Debug.Log($"볼 속도 : {result.magnitude}");
+				//// 볼 속도
+				//ball.velocity = result;
+				//// 볼 회전속도
+				//ball.angularVelocity = transform.right * shootPower;
 
-				// 볼 회전속도
-				ball.angularVelocity = transform.right * shootPower;
+				// 힘 적용
+				ball.AddForce(result * ball.mass, ForceMode.Impulse);
+				// 볼 회전력 적용
+				ball.AddTorque(transform.right * shootPower * ball.inertiaTensor.magnitude, ForceMode.Impulse);
 
 				// ballReturnTime 초 뒤 풀로 돌아감
 				StartCoroutine(ReturnBall(ball, ballReturnTime));
@@ -121,32 +124,56 @@ public class PitchingMachine : MonoBehaviour
 
 	bool VelocityCalculate(Vector3 start, Vector3 target, float speed, out Vector3 result)
 	{
+		// 포물선 운동
+		// 시작위치(start)에서 도착위치(target)까지 도달하기 위한 초기 속도 벡터를 계산
 		result = Vector3.zero;
 
+		// 시작점에서 목표점까지의 방향 벡터
 		Vector3 dir = target - start;
-		Vector3 dirXZ = new Vector3(dir.x, 0f, dir.z);
-		float distance = dirXZ.magnitude;
+
+		// 수평 방향(xz 평면)의 방향 벡터 (Y 높이는 제거)
+		Vector3 horizonDirection = new Vector3(dir.x, 0f, dir.z);
+
+		// 수평 거리 (XZ 평면 거리)
+		float distance = horizonDirection.magnitude;
+
+		// 수직 높이 차이 (목표지점의 y - 시작점의 y)
 		float height = dir.y;
+
+		// 중력 가속도 절대값 9.81f
 		float gravity = Mathf.Abs(Physics.gravity.y);
 
+		// 속도의 제곱 (v²)
 		float speed2 = speed * speed;
-		// 속도⁴ - 중력 * (중력 * 거리² + 높이차이 * 속도²)
+
+		// 포물선 발사각 계산의 판별식 부분 (제곱근 아래 항)
+		// = v⁴ - g * (g * d² + 2 * h * v²)
 		float underSqrt = speed2 * speed2 - gravity * (gravity * distance * distance + 2 * height * speed2);
 
-		if (underSqrt < 0)
-		{
-			return false; // 도달 불가
-		}
+		// 0보다 낮으면 도달 불가
+		if (underSqrt < 0) return false;
 
+		// 판별식의 루트 계산
 		float root = Mathf.Sqrt(underSqrt);
+
+		// 포물선 발사각 θ 계산 (낮은 각도 선택)
 		float angle = Mathf.Atan((speed2 - root) / (gravity * distance));
 
-		// 방향 적용
-		Vector3 dirNorm = dirXZ.normalized;
+		// 수평 방향 단위 벡터 계산 (방향만 남김)
+		Vector3 dirNorm = horizonDirection.normalized;
+
+		// 최종 초기 속도 벡터 = 수평 + 수직 분해
+		// dirNorm * speed * cos(θ) → 수평 속도
+		// Vector3.up * speed * sin(θ) → 수직 속도
 		Vector3 velocity = dirNorm * speed * Mathf.Cos(angle) + Vector3.up * speed * Mathf.Sin(angle);
+
+		// 최종 결과로 출력
 		result = velocity;
+
+		// 성공적으로 계산되었음을 반환
 		return true;
 	}
+
 
 
 	void OnDrawGizmos()
