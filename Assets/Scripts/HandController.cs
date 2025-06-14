@@ -5,18 +5,36 @@ using UnityEngine;
 using UnityEngine.InputSystem.XR;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.InputSystem;
+using UnityEngine.XR.Interaction.Toolkit.UI;
+using System.Runtime.InteropServices.WindowsRuntime;
 
 public class HandController : MonoBehaviour
 {
     public Animator anim;
-	public bool isSelect;
+	private bool isSelect;
+	public bool IsSelect
+	{
+		get { return isSelect; }
+		set
+		{
+			isSelect = value;
+			anim.SetBool("IsSelect", isSelect);
+		}
+	}
 
 	public ActionBasedController controller;
+	public XRRayInteractor rayInteractor;
 
 	void Awake()
 	{
 		anim = GetComponentInChildren<Animator>();
 		controller = GetComponent<ActionBasedController>();
+		rayInteractor = GetComponentInChildren<XRRayInteractor>();
+		if (rayInteractor != null)
+		{
+			rayInteractor.uiHoverEntered.AddListener(OnUIHover);
+			rayInteractor.uiHoverExited.AddListener(OffUIHover);
+		}
 	}
 
 	void Update()
@@ -28,4 +46,8 @@ public class HandController : MonoBehaviour
 			anim.SetFloat("GrabValue", gripValue);
 		}
 	}
+
+	public void OnUIHover(UIHoverEventArgs args) => IsSelect = true;
+
+	public void OffUIHover(UIHoverEventArgs args) => IsSelect = false;
 }
