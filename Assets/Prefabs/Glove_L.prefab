@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6680095115425538634}
   m_Layer: 0
-  m_Name: ring_03_l
+  m_Name: ring_03_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -41,7 +41,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2607607166339003358}
   m_Layer: 0
-  m_Name: pinky_02_l
+  m_Name: pinky_02_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -73,7 +73,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6716848008067893133}
   m_Layer: 0
-  m_Name: middle_01_l
+  m_Name: middle_01_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -105,7 +105,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2970781855838486016}
   m_Layer: 0
-  m_Name: pinky_01_l
+  m_Name: pinky_01_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -137,7 +137,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2170254080982980300}
   m_Layer: 0
-  m_Name: ring_01_l
+  m_Name: ring_01_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -169,7 +169,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2250541698943840655}
   m_Layer: 0
-  m_Name: index_03_l
+  m_Name: index_03_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -234,7 +234,7 @@ Animator:
   m_GameObject: {fileID: 3971955890357849040}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 36c6ef94d61d65a43916a006d4524210, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -255,7 +255,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1599773786415854018}
   m_Layer: 0
-  m_Name: index_01_l
+  m_Name: index_01_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -287,7 +287,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6816080596376240043}
   m_Layer: 0
-  m_Name: hand_l
+  m_Name: hand_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -323,7 +323,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4302102309795793557}
   m_Layer: 0
-  m_Name: middle_02_l
+  m_Name: middle_02_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -355,7 +355,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3871590071968500482}
   m_Layer: 0
-  m_Name: pinky_03_l
+  m_Name: pinky_03_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -386,7 +386,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5070023100095426009}
   m_Layer: 0
-  m_Name: middle_03_l
+  m_Name: middle_03_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -417,7 +417,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8638408799859943181}
   m_Layer: 0
-  m_Name: thumb_01_l
+  m_Name: thumb_01_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -449,7 +449,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6653958864885658748}
   m_Layer: 0
-  m_Name: index_02_l
+  m_Name: index_02_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -614,7 +614,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8310482447352354833}
   m_Layer: 0
-  m_Name: ring_02_l
+  m_Name: ring_02_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -646,7 +646,7 @@ GameObject:
   m_Component:
   - component: {fileID: 632676920393997460}
   m_Layer: 0
-  m_Name: thumb_02_l
+  m_Name: thumb_02_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -678,7 +678,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1474869645764082822}
   m_Layer: 0
-  m_Name: thumb_03_l
+  m_Name: thumb_03_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
