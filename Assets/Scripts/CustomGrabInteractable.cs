@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 
+// 배트 이동 기록용
 public struct VelocitySpeed
 {
 	public Vector3 velocity;
@@ -14,48 +15,69 @@ public struct VelocitySpeed
 		this.time = _time;
 	}
 }
-
 public class CustomGrabInteractable : XRGrabInteractable
 {
 	// 배트가 움직이는 속도 평균내기
 	public Queue<VelocitySpeed> velocities = new();
-	public float velocityDuation = 0.2f; // throwSmoothingDuration	기록할 시간
-	public float velocityAdjust = 1.5f; // velocityScale			속도값 보정
+	public float velocityDuation = 0.2f;	// throwSmoothingDuration	기록할 시간
+	public float velocityAdjust = 1.5f;		// velocityScale			속도값 보정
 
 	private Vector3 previousPosition;	// 이전 위치
-	private Vector3 averageVelocity;    // 평균 속도
+	private Vector3 averageVelocity;	// 평균 속도
+
+	private AudioSource sound;
+	public AudioClip hitSound;  // 타격 사운드
+
+	private IXRSelectInteractor mainInteractor;
+	private IXRSelectInteractor subInteractor;
+	public Transform mainAttachPoint;
+	public Transform subAttachPoint;
+
 
 	void Start()
 	{
-		
 		previousPosition = transform.position;
+
+		sound = GetComponent<AudioSource>();
 	}
 
 	void OnCollisionEnter(Collision collision)
 	{
 		if (!collision.collider.CompareTag("Ball")) return;
+
+		// 사운드 재생
+		sound.PlayOneShot(hitSound);
+
 		Rigidbody ballRigid = collision.rigidbody;
 
-		// 1. 배트 이동 속도 (0.2초 평균)
+		// 볼 속도, 빠따 속도
+		Vector3 ballVelocity = ballRigid.velocity;
 		Vector3 batVelocity = averageVelocity;
 
-		float strength = batVelocity.magnitude * 3.0f;
+		float ballSpeed = ballVelocity.magnitude;
+		float batSpeed = batVelocity.magnitude;
 
-		// 실제 타격 방향 = 배트의 정면 (Z축)
+		// 볼속도 20%, 빠따 속도 80%
+		float exitSpeed = (0.2f * ballSpeed) + (0.8f * batSpeed);
+		// 보정
+		//exitSpeed = Mathf.Clamp(exitSpeed, 5f, 60f);
+
+		// 타격 방향
 		Vector3 swingDir = transform.forward.normalized;
 		Vector3 motionDir = batVelocity.normalized;
+		Vector3 hitDirection = (swingDir * 0.3f + motionDir * 0.7f).normalized;
 
-		// 기본 방향 + 속도 방향 혼합
-		Vector3 hitDirection = (swingDir * 0.7f + motionDir * 0.3f).normalized;
+		// Y 방향 과도하게 아래로 튀지 않도록 보정
+		if (hitDirection.y < -0.4f)
+			hitDirection.y = -0.4f;
+		hitDirection.Normalize();
 
-		Vector3 ballVelocity = ballRigid.velocity;
-		Vector3 finalForce = hitDirection * strength + ballVelocity * 0.1f;
+		// 타구 속도 impulse = mass × velocity → 힘 = 방향 × 속도 × 질량
+		Vector3 impulseForce = hitDirection * exitSpeed * ballRigid.mass;
+		ballRigid.AddForce(impulseForce, ForceMode.Impulse);
 
-		//ballRigid.AddForce(finalForce, ForceMode.Impulse);
-		ballRigid.AddForce(finalForce);
-		Debug.Log($"타격 방향: {hitDirection}, 힘: {strength}");
+		Debug.Log($"[타구 속도] {exitSpeed:F2}, [방향] {hitDirection}");
 	}
-
 
 	void Update()
 	{
@@ -90,5 +112,23 @@ public class CustomGrabInteractable : XRGrabInteractable
 		// velocityScale 로 최종 속도 보정
 		averageVelocity *= velocityAdjust;
 		//Debug.Log($"{velocityDuation}초 기준 평균 속도 : {averageVelocity}");
+	}
+
+	protected override void OnSelectEntered(SelectEnterEventArgs args)
+	{
+		base.OnSelectEntered(args);
+
+		IXRSelectInteractor interactor = args.interactorObject;
+
+		if (mainInteractor == null)
+		{
+			mainInteractor = interactor;
+			//attachTransform = GetClosestAttachPoint(interactor.transform.position);
+		}
+		else if (subInteractor == null && interactor != mainInteractor)
+		{
+			subInteractor = interactor;
+			// 서브는 그냥 따라만 가게 하고 실제 attachTransform은 무시
+		}
 	}
 }

@@ -10,6 +10,7 @@ public class PitchingMachine : MonoBehaviour
 	public Transform[] strikeZones = new Transform[9]; // 스트라이크존 9개 위치
 	[Range(1, 9)]
 	public int currentTarget; // 공을 던질 스트라이크존 번호
+	public Transform catcherPosition; // 포수 위치
 	public GameObject ballPrefab;
 
 	public float shootDelayTime = 1f;	// 던지는 속도
@@ -88,7 +89,8 @@ public class PitchingMachine : MonoBehaviour
 			Rigidbody ball = GetBall();
 
 			// 속도가 느려도 존에 닿을 수 있게
-			if (VelocityCalculate(ball.transform.position, strikeZones[currentTarget - 1].position, shootPower, out Vector3 result))
+			//if (VelocityCalculate(ball.transform.position, strikeZones[currentTarget - 1].position, shootPower, out Vector3 result)) // 스트라이크존 기준
+			if (VelocityCalculate(ball.transform.position, catcherPosition.position, shootPower, out Vector3 result)) // 포수 기준
 			{
 				// 텍스트
 				if (ballSpeedTest != null)
@@ -182,7 +184,8 @@ public class PitchingMachine : MonoBehaviour
 			return;
 
 		Vector3 start = ballSpawnPosition.position;
-		Vector3 target = strikeZones[currentTarget - 1].position;
+		//Vector3 target = strikeZones[currentTarget - 1].position; // 스트라이크존 기준
+		Vector3 target = catcherPosition.position; // 포수 기준
 
 		if (!VelocityCalculate(start, target, shootPower, out Vector3 velocity))
 			return;
