@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Collections;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 
@@ -18,27 +18,26 @@ public struct VelocitySpeed
 public class CustomGrabInteractable : XRGrabInteractable
 {
 	// 배트가 움직이는 속도 평균내기
-	public Queue<VelocitySpeed> velocities = new();
-	public float velocityDuation = 0.2f;	// throwSmoothingDuration	기록할 시간
-	public float velocityAdjust = 1.5f;		// velocityScale			속도값 보정
+	private Queue<VelocitySpeed> velocities = new();
+	[Header("Custom Property")]
+	public float velocityDuation = 0.2f;    // throwSmoothingDuration	기록할 시간
+	public float velocityAdjust = 1.5f;     // velocityScale			속도값 보정
 
-	private Vector3 previousPosition;	// 이전 위치
-	private Vector3 averageVelocity;	// 평균 속도
+	private Vector3 previousPosition;   // 이전 위치
+	private Vector3 averageVelocity;    // 평균 속도
 
 	private AudioSource sound;
 	public AudioClip hitSound;  // 타격 사운드
 
-	private IXRSelectInteractor mainInteractor;
-	private IXRSelectInteractor subInteractor;
-	public Transform mainAttachPoint;
-	public Transform subAttachPoint;
-
+	public IXRSelectInteractor mainInteractor = null;
+	public IXRSelectInteractor subInteractor = null;
 
 	void Start()
 	{
 		previousPosition = transform.position;
 
 		sound = GetComponent<AudioSource>();
+
 	}
 
 	void OnCollisionEnter(Collision collision)
@@ -76,7 +75,7 @@ public class CustomGrabInteractable : XRGrabInteractable
 		Vector3 impulseForce = hitDirection * exitSpeed * ballRigid.mass;
 		ballRigid.AddForce(impulseForce, ForceMode.Impulse);
 
-		Debug.Log($"[타구 속도] {exitSpeed:F2}, [방향] {hitDirection}");
+		//Debug.Log($"[타구 속도] {exitSpeed:F2}, [방향] {hitDirection}");
 	}
 
 	void Update()
@@ -114,21 +113,5 @@ public class CustomGrabInteractable : XRGrabInteractable
 		//Debug.Log($"{velocityDuation}초 기준 평균 속도 : {averageVelocity}");
 	}
 
-	protected override void OnSelectEntered(SelectEnterEventArgs args)
-	{
-		base.OnSelectEntered(args);
 
-		IXRSelectInteractor interactor = args.interactorObject;
-
-		if (mainInteractor == null)
-		{
-			mainInteractor = interactor;
-			//attachTransform = GetClosestAttachPoint(interactor.transform.position);
-		}
-		else if (subInteractor == null && interactor != mainInteractor)
-		{
-			subInteractor = interactor;
-			// 서브는 그냥 따라만 가게 하고 실제 attachTransform은 무시
-		}
-	}
 }
