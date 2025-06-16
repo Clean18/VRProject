@@ -25,7 +25,7 @@ public class PitchingMachine : MonoBehaviour
 	public float ballReturnTime = 9f;
 
 	// 공속도 text
-	public TMP_Text ballSpeedTest;
+	public TMP_Text ballSpeedText;
 
 	void Awake()
 	{
@@ -90,12 +90,12 @@ public class PitchingMachine : MonoBehaviour
 			Rigidbody ball = GetBall();
 
 			// 속도가 느려도 존에 닿을 수 있게
-			//if (VelocityCalculate(ball.transform.position, strikeZones[currentTarget - 1].position, shootPower, out Vector3 result)) // 스트라이크존 기준
-			if (VelocityCalculate(ball.transform.position, catcherPosition.position, shootPower, out Vector3 result)) // 포수 기준
+			if (VelocityCalculate(ball.transform.position, strikeZones[currentTarget - 1].position, shootPower, out Vector3 result)) // 스트라이크존 기준
+			//if (VelocityCalculate(ball.transform.position, catcherPosition.position, shootPower, out Vector3 result)) // 포수 기준
 			{
 				// 텍스트
-				if (ballSpeedTest != null)
-					ballSpeedTest.text = string.Format("{0:F1} km/h", (result.magnitude * 3.6f));
+				if (ballSpeedText != null)
+					ballSpeedText.text = string.Format("{0:F1} km/h", (result.magnitude * 3.6f));
 
 				//// 볼 속도
 				//ball.velocity = result;
@@ -173,56 +173,24 @@ public class PitchingMachine : MonoBehaviour
 		// 최종 결과로 출력
 		result = velocity;
 
-		// 성공적으로 계산되었음을 반환
 		return true;
-	}
-
-	void OnDrawGizmos()
-	{
-		if (ballSpawnPosition == null || strikeZones == null || strikeZones.Length == 0)
-			return;
-
-		Vector3 start = ballSpawnPosition.position;
-		//Vector3 target = strikeZones[currentTarget - 1].position; // 스트라이크존 기준
-		Vector3 target = catcherPosition.position; // 포수 기준
-
-		if (!VelocityCalculate(start, target, shootPower, out Vector3 velocity))
-			return;
-
-		// 포물선 궤적 그리기
-		Gizmos.color = Color.red;
-		Vector3 prev = start;
-		float simulationTime = 2.0f;
-		float step = 0.05f;
-		Vector3 gravity = Physics.gravity;
-
-		for (float t = 0; t < simulationTime; t += step)
-		{
-			Vector3 pos = start + velocity * t + 0.5f * gravity * t * t;
-			Gizmos.DrawLine(prev, pos);
-			prev = pos;
-		}
-
-		// 시작점, 도착점 표시
-		Gizmos.color = Color.yellow;
-		Gizmos.DrawSphere(start, 0.05f);
-		Gizmos.DrawSphere(target, 0.05f);
 	}
 
 	public void BallShoot(bool isCenter, float speed)
 	{
 		Rigidbody ball = GetBall();
-
+		int ranIndex = Random.Range(0, 9);
 		Vector3 targetPos = isCenter == true ?
 			strikeZones[4].position // 중앙
-			: strikeZones[Random.Range(0, 9)].position; // 랜덤
+			: strikeZones[ranIndex].position; // 랜덤
 
-		Debug.Log($"{(isCenter == true ? "중앙" : "랜덤")}슛 발사 Speed : {speed}");
+		Debug.Log($"{(isCenter == true ? "중앙" : $"랜덤 {ranIndex + 1}번")} 슛 발사 Speed : {speed}");
+		Debug.Log($"targetPos : {targetPos}");
 
-		if (VelocityCalculate(ball.transform.position, targetPos, speed, out Vector3 result)) // catcherPosition.position
+		if (VelocityCalculate(ball.transform.position, targetPos, speed, out Vector3 result))
 		{
-			if (ballSpeedTest != null)
-				ballSpeedTest.text = string.Format("{0:F1} km/h", (result.magnitude * 3.6f));
+			if (ballSpeedText != null)
+				ballSpeedText.text = string.Format("{0:F1} km/h", (result.magnitude * 3.6f));
 
 			ball.AddForce(result * ball.mass, ForceMode.Impulse);
 			ball.AddTorque(transform.right * speed * ball.inertiaTensor.magnitude, ForceMode.Impulse);

@@ -29,8 +29,10 @@ public class CustomGrabInteractable : XRGrabInteractable
 	private AudioSource sound;
 	public AudioClip hitSound;  // 타격 사운드
 
-	public IXRSelectInteractor mainInteractor = null;
-	public IXRSelectInteractor subInteractor = null;
+	[Header("물리 추가 보정 값")]
+	public float bonusPower;
+
+	
 
 	void Start()
 	{
@@ -57,22 +59,31 @@ public class CustomGrabInteractable : XRGrabInteractable
 		float batSpeed = batVelocity.magnitude;
 
 		// 볼속도 20%, 빠따 속도 80%
-		float exitSpeed = (0.2f * ballSpeed) + (0.8f * batSpeed);
+		float exitSpeed = (0.6f * ballSpeed) + (0.4f * batSpeed);
+		UIManager.Instance.DebugText($"exitSpeed({exitSpeed})\n= ballSpeed({ballSpeed})\n+ batSpeed({batSpeed})");
+		//if (batSpeed < 0.2f)
+		//{
+		//	UIManager.Instance.DebugText($"너무 약하게 휘두름\n : {batSpeed}");
+		//	return;
+		//}
 		// 보정
-		//exitSpeed = Mathf.Clamp(exitSpeed, 5f, 60f);
+		//exitSpeed = Mathf.Max(exitSpeed, 5f);
+		exitSpeed *= bonusPower;
 
 		// 타격 방향
 		Vector3 swingDir = transform.forward.normalized;
 		Vector3 motionDir = batVelocity.normalized;
-		Vector3 hitDirection = (swingDir * 0.3f + motionDir * 0.7f).normalized;
+		Vector3 hitDirection = (swingDir * 0.1f + motionDir * 0.9f).normalized;
 
 		// Y 방향 과도하게 아래로 튀지 않도록 보정
 		if (hitDirection.y < -0.4f)
 			hitDirection.y = -0.4f;
+
 		hitDirection.Normalize();
 
 		// 타구 속도 impulse = mass × velocity → 힘 = 방향 × 속도 × 질량
 		Vector3 impulseForce = hitDirection * exitSpeed * ballRigid.mass;
+		UIManager.Instance.DebugText($"타격 파워 : {impulseForce.magnitude}");
 		ballRigid.AddForce(impulseForce, ForceMode.Impulse);
 
 		//Debug.Log($"[타구 속도] {exitSpeed:F2}, [방향] {hitDirection}");

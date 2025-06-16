@@ -30,10 +30,12 @@ public class UIManager : MonoBehaviour
 	// Ball TargetMode
 	public Toggle targetModeToggle;
 	public GameObject randomTarget;
-	public bool isCenter;
+	public bool isCenter = true;
+	// Ball Speed Text
+	public TMP_Text shootCountText;
 
-	[Header("Other")]
-	public int temp;
+	[Header("Test")]
+	public TMP_Text batSpeedText;
 
 	public static UIManager Instance { get; private set; }
 
@@ -89,7 +91,11 @@ public class UIManager : MonoBehaviour
 	{
 		// 버튼 누르면 세팅 ui 사라지고 3초 카운트 후 슛
 		// 스트라이크존 or 배트에 닿으면 UI 다시 활성화
+		StartCoroutine(Shoot());
+	}
 
+	IEnumerator Shoot()
+	{
 		// 스트라이크존 카메라 높이에 비례해서 높이 지정 및 활성화
 		Vector3 stPos = strikeZone.transform.position;
 		float camY = Camera.main.transform.position.y;
@@ -97,20 +103,35 @@ public class UIManager : MonoBehaviour
 		strikeZone.transform.position = new Vector3(stPos.x, camY * 0.75f, stPos.z);
 
 		// Setting 비활성화
+		uiPitchingSetting.SetActive(false);
+
+		shootCountText.text = "3";
 		// 스트라이크존 활성화
-		OnPitchingSetting();
+		strikeZone.gameObject.SetActive(true);
+
+		yield return new WaitForSeconds(1f);
+
+		shootCountText.text = "2";
+		yield return new WaitForSeconds(1f);
+
+		shootCountText.text = "1";
+		yield return new WaitForSeconds(1f);
 
 		// 슛
 		pitchingMachine.BallShoot(isCenter, speedValue);
 	}
 
-	public void OnPitchingSetting()
-	{
-		uiPitchingSetting.SetActive(false);
-		strikeZone.gameObject.SetActive(true);
-	}
 	public void OffPitchingSetting()
 	{
+		StartCoroutine(OffPitchingSettingRoutine());
+	}
+
+	IEnumerator OffPitchingSettingRoutine()
+	{
+		Debug.Log("5초 대기중...");
+		// 여기서 5초 대기
+		yield return new WaitForSeconds(5f);
+
 		uiPitchingSetting.SetActive(true);
 		strikeZone.gameObject.SetActive(false);
 	}
@@ -120,8 +141,8 @@ public class UIManager : MonoBehaviour
 		Debug.Log($"스피드 슬라이더 값 변경 : {value}");
 		// 텍스트 변경 정수만
 		speedText.text = $"속도 : {(value * 100):F0}";
-		// 스피드는 최소 12.2 ~ 50
-		speedValue = Mathf.Lerp(12.2f, 50f, value);
+		// 스피드는 최소 12.3 ~ 50
+		speedValue = Mathf.Lerp(12.3f, 50f, value);
 	}
 
 	public void OnSoundValue(float value)
@@ -136,5 +157,10 @@ public class UIManager : MonoBehaviour
 		Debug.Log($"타겟 모드 토글 값 변경 : {(isOn == true ? "랜덤" : "중앙")}");
 		randomTarget.SetActive(isOn);
 		isCenter = !isOn;
+	}
+
+	public void DebugText(string text)
+	{
+		batSpeedText.text = text;
 	}
 }
