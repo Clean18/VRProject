@@ -45,7 +45,7 @@ public class CustomGrabInteractable : XRGrabInteractable
 		if (!collision.collider.CompareTag("Ball")) return;
 
 		// 사운드 재생
-		sound.PlayOneShot(hitSound);
+		sound.PlayOneShot(hitSound, UIManager.Instance.soundValue);
 
 		Rigidbody ballRigid = collision.rigidbody;
 

@@ -39,10 +39,11 @@ public class PitchingMachine : MonoBehaviour
 
 	void Update()
 	{
-		if (shootRoutine == null)
-		{
-			shootRoutine = StartCoroutine(Shoot());
-		}
+		// UI 버튼을 통해서 발사하게 변경
+		//if (shootRoutine == null)
+		//{
+		//	shootRoutine = StartCoroutine(Shoot());
+		//}
 	}
 
 	void CreateBall()
@@ -176,8 +177,6 @@ public class PitchingMachine : MonoBehaviour
 		return true;
 	}
 
-
-
 	void OnDrawGizmos()
 	{
 		if (ballSpawnPosition == null || strikeZones == null || strikeZones.Length == 0)
@@ -210,4 +209,25 @@ public class PitchingMachine : MonoBehaviour
 		Gizmos.DrawSphere(target, 0.05f);
 	}
 
+	public void BallShoot(bool isCenter, float speed)
+	{
+		Rigidbody ball = GetBall();
+
+		Vector3 targetPos = isCenter == true ?
+			strikeZones[4].position // 중앙
+			: strikeZones[Random.Range(0, 9)].position; // 랜덤
+
+		Debug.Log($"{(isCenter == true ? "중앙" : "랜덤")}슛 발사 Speed : {speed}");
+
+		if (VelocityCalculate(ball.transform.position, targetPos, speed, out Vector3 result)) // catcherPosition.position
+		{
+			if (ballSpeedTest != null)
+				ballSpeedTest.text = string.Format("{0:F1} km/h", (result.magnitude * 3.6f));
+
+			ball.AddForce(result * ball.mass, ForceMode.Impulse);
+			ball.AddTorque(transform.right * speed * ball.inertiaTensor.magnitude, ForceMode.Impulse);
+
+			StartCoroutine(ReturnBall(ball, ballReturnTime));
+		}
+	}
 }
