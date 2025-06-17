@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1476519478181288671}
   - component: {fileID: 7026866018925391698}
   - component: {fileID: 8610425887573568171}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Default - Part
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -94,7 +94,7 @@ GameObject:
   - component: {fileID: 4346680353761215699}
   - component: {fileID: 1715840885469879146}
   - component: {fileID: 7884331355113990458}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Default - Part 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -179,7 +179,7 @@ GameObject:
   - component: {fileID: 8667864086546227214}
   - component: {fileID: -9026638405773008639}
   - component: {fileID: -6008122308911036477}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Baseball
   m_TagString: Ball
   m_Icon: {fileID: 0}
@@ -375,7 +375,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7265554415679887355}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: ball
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -22,7 +22,7 @@ public class PitchingMachine : MonoBehaviour
 	public int poolCount = 10;
 	public List<Rigidbody> ballPool = new();
 	public Dictionary<Rigidbody, TrailRenderer> trailDic = new();
-	public float ballReturnTime = 9f;
+	public float ballReturnTime = 30f;
 
 	// 공속도 text
 	public TMP_Text ballSpeedText;
@@ -129,6 +129,7 @@ public class PitchingMachine : MonoBehaviour
 	{
 		// 포물선 운동
 		// 시작위치(start)에서 도착위치(target)까지 도달하기 위한 초기 속도 벡터를 계산
+
 		result = Vector3.zero;
 
 		// 시작점에서 목표점까지의 방향 벡터

@@ -367,6 +367,9 @@ MonoBehaviour:
   velocityDuation: 0.2
   velocityAdjust: 1.5
   hitSound: {fileID: 8300000, guid: e1066dd5dcea86743a26ed4d7782bf8d, type: 3}
+  bonusPower: 7
+  isHit: 0
+  hitterTransform: {fileID: 0}
 --- !u!82 &3466837017747834726
 AudioSource:
   m_ObjectHideFlags: 0

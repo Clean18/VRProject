@@ -55,7 +55,8 @@ public class UIManager : MonoBehaviour
 		// 피칭머신 세팅
 		PitchingMachineInit();
 
-		SetDisplayText("");
+		SetDisplayText(" ");
+		DebugText(" ");
 	}
 
 	void PitchingMachineInit()
@@ -122,6 +123,7 @@ public class UIManager : MonoBehaviour
 
 		// 슛
 		pitchingMachine.BallShoot(isCenter, speedValue);
+		OffPitchingSetting();
 	}
 
 	public void OffPitchingSetting() => StartCoroutine(OffPitchingSettingRoutine());
@@ -130,7 +132,7 @@ public class UIManager : MonoBehaviour
 	{
 		Debug.Log("5초 대기중...");
 		// 여기서 5초 대기
-		yield return new WaitForSeconds(5f);
+		yield return new WaitForSeconds(6f);
 
 		uiPitchingSetting.SetActive(true);
 		strikeZone.gameObject.SetActive(false);
@@ -161,5 +163,14 @@ public class UIManager : MonoBehaviour
 
 	public void DebugText(string text) => batSpeedText.text = text;
 
-	public void SetDisplayText(string text) => displayText.text = text;
+	public void SetDisplayText(string text)
+	{
+		displayText.text = text;
+		Invoke("DisplayTextClear", 3);
+	}
+
+	void DisplayTextClear()
+	{
+		displayText.text = " ";
+	}
 }
