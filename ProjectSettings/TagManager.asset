@@ -8,6 +8,8 @@ TagManager:
   - Bat
   - RightHand
   - LeftHand
+  - HomerunCheck
+  - FoulCheck
   layers:
   - Default
   - TransparentFX

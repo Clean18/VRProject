@@ -10,15 +10,28 @@ public class Ball : MonoBehaviour
 
 	void OnDisable() => isHit = false;
 
-	void OnTriggerEnter(Collider other) => Hit();
+	void OnTriggerEnter(Collider other) => Hit(other.gameObject);
 
-	void OnCollisionEnter(Collision collision) => Hit();
+	void OnCollisionEnter(Collision collision) => Hit(collision.gameObject);
 
-	void Hit()
+	void Hit(GameObject go)
 	{
 		if (isHit) return;
+
 		isHit = true;
 		Debug.Log("볼에 뭔가 맞음");
 		UIManager.Instance.OffPitchingSetting();
+
+		if (go.CompareTag("HomerunCheck"))
+		{
+			// 홈런
+			UIManager.Instance.SetDisplayText("Home Run!!");
+		}
+		else if (go.CompareTag("PoulCheck"))
+		{
+			// 파울
+			UIManager.Instance.SetDisplayText("Poul...");
+		}
+
 	}
 }

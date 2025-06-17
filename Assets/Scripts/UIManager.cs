@@ -34,6 +34,9 @@ public class UIManager : MonoBehaviour
 	// Ball Speed Text
 	public TMP_Text shootCountText;
 
+	[Header("Display")]
+	public TMP_Text displayText;
+
 	[Header("Test")]
 	public TMP_Text batSpeedText;
 
@@ -51,6 +54,8 @@ public class UIManager : MonoBehaviour
 	{
 		// 피칭머신 세팅
 		PitchingMachineInit();
+
+		SetDisplayText("");
 	}
 
 	void PitchingMachineInit()
@@ -87,12 +92,10 @@ public class UIManager : MonoBehaviour
 		}
 	}
 
-	public void OnShootButton()
-	{
-		// 버튼 누르면 세팅 ui 사라지고 3초 카운트 후 슛
-		// 스트라이크존 or 배트에 닿으면 UI 다시 활성화
-		StartCoroutine(Shoot());
-	}
+	// 버튼 누르면 세팅 ui 사라지고 3초 카운트 후 슛
+	// 스트라이크존 or 배트에 닿으면 UI 다시 활성화
+	// 에디터에서 연결됨
+	public void OnShootButton() => StartCoroutine(Shoot());
 
 	IEnumerator Shoot()
 	{
@@ -121,10 +124,7 @@ public class UIManager : MonoBehaviour
 		pitchingMachine.BallShoot(isCenter, speedValue);
 	}
 
-	public void OffPitchingSetting()
-	{
-		StartCoroutine(OffPitchingSettingRoutine());
-	}
+	public void OffPitchingSetting() => StartCoroutine(OffPitchingSettingRoutine());
 
 	IEnumerator OffPitchingSettingRoutine()
 	{
@@ -159,8 +159,7 @@ public class UIManager : MonoBehaviour
 		isCenter = !isOn;
 	}
 
-	public void DebugText(string text)
-	{
-		batSpeedText.text = text;
-	}
+	public void DebugText(string text) => batSpeedText.text = text;
+
+	public void SetDisplayText(string text) => displayText.text = text;
 }
